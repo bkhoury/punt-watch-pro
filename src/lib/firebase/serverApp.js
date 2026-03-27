@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { initializeServerApp, initializeApp } from "firebase/app";
 
 import { getAuth } from "firebase/auth";
+import { firebaseConfig } from "./firebaseConfig";
 
 // Returns an authenticated client SDK instance for use in Server Side Rendering
 // and Static Site Generation
@@ -17,7 +18,7 @@ export async function getAuthenticatedAppForUser() {
   // other affordances for use in server environments.
   const firebaseServerApp = initializeServerApp(
     // https://github.com/firebase/firebase-js-sdk/issues/8863#issuecomment-2751401913
-    initializeApp(),
+    initializeApp(firebaseConfig),
     {
       authIdToken,
     }

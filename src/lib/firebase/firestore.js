@@ -113,6 +113,21 @@ export async function getRestaurants(db = db, filters = {}) {
   });
 }
 
+export async function getPunts(db = db, filters = {}) {
+  let q = query(collection(db, "(default)"));
+
+  // q = applyQueryFilters(q, filters);
+  const results = await getDocs(q);
+  return results.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data(),
+      // Only plain objects can be passed to Client Components from Server Components
+      // timestamp: doc.data().timestamp.toDate(),
+    };
+  });
+}
+
 export function getRestaurantsSnapshot(cb, filters = {}) {
   if (typeof cb !== "function") {
     console.log("Error: The callback parameter is not a function");
@@ -121,6 +136,40 @@ export function getRestaurantsSnapshot(cb, filters = {}) {
 
   let q = query(collection(db, "restaurants"));
   q = applyQueryFilters(q, filters);
+
+  return onSnapshot(q, (querySnapshot) => {
+    const results = querySnapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+        // Only plain objects can be passed to Client Components from Server Components
+        timestamp: doc.data().timestamp.toDate(),
+      };
+    });
+
+    cb(results);
+  });
+}
+
+function applyPuntQueryFilters(q, { sort }) {
+  if (sort === "Hangtime") {
+    q = query(q, orderBy("hangtime", "desc"));
+  } else if (sort === "Distance") {
+    q = query(q, orderBy("distance", "desc"));
+  } else {
+    q = query(q, orderBy("timestamp", "desc"));
+  }
+  return q;
+}
+
+export function getPuntsSnapshot(cb, filters = {}) {
+  if (typeof cb !== "function") {
+    console.log("Error: The callback parameter is not a function");
+    return;
+  }
+
+  let q = query(collection(db, "(default)"));
+  q = applyPuntQueryFilters(q, filters);
 
   return onSnapshot(q, (querySnapshot) => {
     const results = querySnapshot.docs.map((doc) => {

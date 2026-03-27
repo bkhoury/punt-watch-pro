@@ -5,30 +5,31 @@ import {
   getAuthenticatedAppForUser,
   getAuthenticatedAppForUser as getUser,
 } from "@/src/lib/firebase/serverApp.js";
-import ReviewsList, {
-  ReviewsListSkeleton,
-} from "@/src/components/Reviews/ReviewsList";
-import {
-  GeminiSummary,
-  GeminiSummarySkeleton,
-} from "@/src/components/Reviews/ReviewSummary";
+import PuntListings from "@/src/components/PuntListings.jsx";
 import { getFirestore } from "firebase/firestore";
+import { getPunts, getRestaurants } from "@/src/lib/firebase/firestore.js";
 
 export default async function Home(props) {
-  // This is a server component, we can access URL
-  // parameters via Next.js and download the data
-  // we need for this page
-  const params = await props.params;
-  const { currentUser } = await getUser();
+  const searchParams = await props.searchParams;
+  // Using seachParams which Next.js provides, allows the filtering to happen on the server-side, for example:
+  // ?city=London&category=Indian&sort=Review
   const { firebaseServerApp } = await getAuthenticatedAppForUser();
-  const restaurant = await getRestaurantById(
+  const restaurants = await getRestaurants(
     getFirestore(firebaseServerApp),
-    params.id
+    searchParams
   );
-
+  console.log("InitialRestaurants", restaurants);
+  const punts = await getPunts(
+    getFirestore(firebaseServerApp),
+    searchParams
+  );
+  console.log("InitialPunts", punts);
   return (
-    <main className="main__restaurant">
-        <p className="main__restaurant__title">Welcome, Punter!</p>
+    <main className="main__home">
+      <PuntListings
+        initialPunts={punts}
+        searchParams={searchParams}
+      />
     </main>
   );
 }

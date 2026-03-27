@@ -44,8 +44,8 @@ export default function Header({ initialUser }) {
   return (
     <header>
       <Link href="/" className="logo">
-        <img src="/friendly-eats.svg" alt="FriendlyEats" />
-        Friendly Eats
+        <img src="/Punt Watch Pro Logo.png" alt="FriendlyEats" />
+        Punt Watch Pro
       </Link>
       {user ? (
         <>

@@ -1,8 +1,7 @@
-import { gemini20Flash, googleAI } from "@genkit-ai/googleai";
-import { genkit } from "genkit";
 import { getReviewsByRestaurantId } from "@/src/lib/firebase/firestore.js";
 import { getAuthenticatedAppForUser } from "@/src/lib/firebase/serverApp";
 import { getFirestore } from "firebase/firestore";
+import { GoogleGenAI } from "@google/genai";
 
 export async function GeminiSummary({ restaurantId }) {
   const { firebaseServerApp } = await getAuthenticatedAppForUser();
@@ -30,15 +29,16 @@ export async function GeminiSummary({ restaurantId }) {
     }
     console.log("Generating summary with Gemini for restaurant", restaurantId);
     // Configure a Genkit instance.
-    const ai = genkit({
-      plugins: [googleAI()],
-      model: gemini20Flash, // set default model
-    });
-    const { text } = await ai.generate(prompt);
 
+    const ai2 = new GoogleGenAI({});
+
+    const response = await ai2.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: prompt,
+  });
     return (
       <div className="restaurant__review_summary">
-        <p>{text}</p>
+        <p>{response.text}</p>
         <p>✨ Summarized with Gemini</p>
       </div>
     );
