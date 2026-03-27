@@ -12,9 +12,7 @@ import PuntFilters from "@/src/components/PuntFilters.jsx";
 
 const PuntItem = ({ punt }) => (
   <li key={punt.id}>
-    <Link href={`/punt/${punt.id}`}>
       <ActivePunt punt={punt} />
-    </Link>
   </li>
 );
 
