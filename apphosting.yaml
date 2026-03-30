@@ -21,3 +21,10 @@ runConfig:
   # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
   # - variable: MY_SECRET
   #   secret: mySecretRef
+
+env:
+  - variable: FIREBASE_API_KEY # Or NEXT_PUBLIC_FIREBASE_API_KEY if using Next.js for client-side access
+    value: AIzaSyBudH7k7BVYF8xOaqAhRMYb_2PFxXb6ARg
+    availability:
+      - BUILD
+      - RUNTIME
