@@ -2,11 +2,9 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import {
-  signInWithGoogle,
   signOut,
   onIdTokenChanged,
 } from "@/src/lib/firebase/auth.js";
-import { addFakeRestaurantsAndReviews } from "@/src/lib/firebase/firestore.js";
 import { setCookie, deleteCookie } from "cookies-next";
 
 function useUserSession(initialUser) {
@@ -36,11 +34,6 @@ export default function Header({ initialUser }) {
     signOut();
   };
 
-  const handleSignIn = (event) => {
-    event.preventDefault();
-    signInWithGoogle();
-  };
-
   return (
     <header>
       <Link href="/" className="logo">
@@ -50,26 +43,23 @@ export default function Header({ initialUser }) {
       {user ? (
         <>
           <div className="profile">
-            <p>
+            <Link href="/profile">
               <img
                 className="profileImage"
-                src={user.photoURL || "/profile.svg"}
-                alt={user.email}
+                src={user.photoURL ?? "/profile.svg"}
+                alt={user.displayName || user.email}
+                onError={(e) => { e.target.src = "/profile.svg"; }}
               />
               {user.displayName}
-            </p>
+            </Link>
 
             <div className="menu">
               ...
               <ul>
                 <li>{user.displayName}</li>
-
                 <li>
-                  <a href="#" onClick={addFakeRestaurantsAndReviews}>
-                    Add sample restaurants
-                  </a>
+                  <Link href="/profile">Edit Profile</Link>
                 </li>
-
                 <li>
                   <a href="#" onClick={handleSignOut}>
                     Sign Out
@@ -81,10 +71,10 @@ export default function Header({ initialUser }) {
         </>
       ) : (
         <div className="profile">
-          <a href="#" onClick={handleSignIn}>
+          <Link href="/login">
             <img src="/profile.svg" alt="A placeholder user image" />
-            Sign In with Google
-          </a>
+            Sign In
+          </Link>
         </div>
       )}
     </header>

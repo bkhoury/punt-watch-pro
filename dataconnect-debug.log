@@ -1,0 +1,34 @@
+I0330 10:41:10.930678   27733 load.go:31] Reloading schema and connectors...
+W0330 10:41:10.975999   27733 control.go:74] [projects/emulator/locations/emulator/services/puntprowatch e1b2] connector "example" has errors: example/queries.gql:21:5: Cannot query field "id" on type "Interaction_KeyOutput".
+example/queries.gql:13:3: Field "interaction_insert" must not have a selection since type "Interaction_KeyOutput" has no subfields.
+example/queries.gql:46:5: Cannot query field "id" on type "Product_KeyOutput".
+example/queries.gql:40:3: Field "product_update" must not have a selection since type "Product_KeyOutput" has no subfields.
+
+sources: example/queries.gql [1392B] 
+I0330 10:41:10.976249   27733 control.go:100] [projects/emulator/locations/emulator/services/puntprowatch e1b2] UpdateResources(): done
+Main schema: sources: schema/schema.gql [744B] 
+Connector "example": sources: example/queries.gql [1392B] 
+E0330 10:41:10.977416   27733 load.go:73] Could not load sources: 
+Errors: example/queries.gql:21:5: Cannot query field "id" on type "Interaction_KeyOutput".
+example/queries.gql:13:3: Field "interaction_insert" must not have a selection since type "Interaction_KeyOutput" has no subfields.
+example/queries.gql:46:5: Cannot query field "id" on type "Product_KeyOutput".
+example/queries.gql:40:3: Field "product_update" must not have a selection since type "Product_KeyOutput" has no subfields.
+I0330 10:41:10.979128   27733 collector.go:107] schema extensions wrote into "/Users/briankhoury/Desktop/Development/Punt Pro Web App/Javascript/Punt Pro Watch/dataconnect/.dataconnect/schema"
+Generated sources: main/query.gql [6585B] main/mutation.gql [18039B] prelude.gql [80731B] main/implicit.gql [2198B] main/input.gql [41931B] main/relation.gql [21184B] 
+I0330 10:41:10.979594   27733 load.go:74] Finished reloading
+I0330 10:41:10.982387   27733 dev.go:104] Listening on address (HTTP + gRPC): 127.0.0.1:9399
+I0330 10:41:10.982970   27733 dev.go:104] Listening on address (HTTP + gRPC): [::1]:9399
+W0330 10:41:14.147677   27733 control.go:74] [projects/emulator/locations/emulator/services/puntprowatch 9c83] connector "example" has errors: example/queries.gql:21:5: Cannot query field "id" on type "Interaction_KeyOutput".
+example/queries.gql:13:3: Field "interaction_insert" must not have a selection since type "Interaction_KeyOutput" has no subfields.
+example/queries.gql:46:5: Cannot query field "id" on type "Product_KeyOutput".
+example/queries.gql:40:3: Field "product_update" must not have a selection since type "Product_KeyOutput" has no subfields.
+
+sources: example/queries.gql [1392B] 
+I0330 10:41:14.147709   27733 control.go:100] [projects/emulator/locations/emulator/services/puntprowatch 9c83] UpdateResources(): done
+Main schema: sources: schema/schema.gql [744B] 
+Connector "example": sources: example/queries.gql [1392B] 
+I0330 10:41:14.147728   27733 service.go:185] [projects/emulator/locations/emulator/services/puntprowatch 9c83] while configuring to server.Settings{ConnectionString:"dbname='fdcdb' host='127.0.0.1' port='5432' sslmode='disable' dbname='fdcdb'", MaxOpenConnection:0, UseDummy:false, EnableGoogleMLIntegration:false, SchemaSettings:esql.Settings{SchemaValidationMode:"", SchemaName:""}}, failed to reload last live sources: 
+Errors: example/queries.gql:21:5: Cannot query field "id" on type "Interaction_KeyOutput".
+example/queries.gql:13:3: Field "interaction_insert" must not have a selection since type "Interaction_KeyOutput" has no subfields.
+example/queries.gql:46:5: Cannot query field "id" on type "Product_KeyOutput".
+example/queries.gql:40:3: Field "product_update" must not have a selection since type "Product_KeyOutput" has no subfields.

@@ -5,7 +5,6 @@
 
 import { React, useState, useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
-import { getRestaurantSnapshotById } from "@/src/lib/firebase/firestore.js";
 import { useUser } from "@/src/lib/getUser";
 import RestaurantDetails from "@/src/components/RestaurantDetails.jsx";
 import { updateRestaurantImage } from "@/src/lib/firebase/storage.js";

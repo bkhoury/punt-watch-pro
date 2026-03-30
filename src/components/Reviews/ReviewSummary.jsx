@@ -27,8 +27,6 @@ export async function GeminiSummary({ restaurantId }) {
         'GEMINI_API_KEY not set. Set it with "firebase apphosting:secrets:set GEMINI_API_KEY"'
       );
     }
-    console.log("Generating summary with Gemini for restaurant", restaurantId);
-    // Configure a Genkit instance.
 
     const ai2 = new GoogleGenAI({});
 

@@ -50,7 +50,7 @@ const PuntDetails = ({ punt }) => (
 const PuntMetadata = ({ punt }) => (
   <div className="punt__meta">
     <p>
-      {punt.hangtime.toFixed(2)} seconds  {punt.distance} yards
+      {punt.hangtime.toFixed(2)} seconds  {punt.distance} yards {new Date(punt.createdAt).toLocaleString()}
     </p>
   </div>
 );
@@ -87,12 +87,11 @@ export default function PuntListings({
       setPunts(filtered);
     }, filters)
   }, [filters]);
-  console.log("InitialPunts", filters);
   return (
     <article>
       <PuntFilters filters={filters} setFilters={setFilters} />
       <ul className="punts">
-        {initialPunts.map((punt) => (
+        {punts.map((punt) => (
           <PuntItem key={punt.id} punt={punt} />
         ))}
       </ul>
