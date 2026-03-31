@@ -23,8 +23,43 @@ runConfig:
   #   secret: mySecretRef
 
 env:
-  - variable: FIREBASE_API_KEY # Or NEXT_PUBLIC_FIREBASE_API_KEY if using Next.js for client-side access
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
     value: AIzaSyBudH7k7BVYF8xOaqAhRMYb_2PFxXb6ARg
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: punt-watch-pro.firebaseapp.com
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_DATABASE_URL
+    value: https://punt-watch-pro-default-rtdb.firebaseio.com
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: punt-watch-pro
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: punt-watch-pro.firebasestorage.app
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: 347505111463
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: 1:347505111463:web:5bc6307d87e402e3598682
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: G-LPFWYLJ3Q5
     availability:
       - BUILD
       - RUNTIME
