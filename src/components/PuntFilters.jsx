@@ -20,7 +20,7 @@ function FilterSelect({ label, options, value, onChange, name, icon }) {
   );
 }
 
-export default function PuntFilters({ filters, setFilters }) {
+export default function PuntFilters({ filters, setFilters, users = [] }) {
   const handleSelectionChange = (event, name) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -77,6 +77,31 @@ export default function PuntFilters({ filters, setFilters }) {
             icon="/sortBy.svg"
           />
 
+          <div>
+            <label>
+              Punter
+              <select
+                value={filters.uid}
+                onChange={(event) => {
+                  const selected = users.find((u) => u.uid === event.target.value);
+                  setFilters((prev) => ({
+                    ...prev,
+                    uid: event.target.value,
+                    userName: selected ? selected.displayName : "",
+                  }));
+                }}
+                name="uid"
+              >
+                <option value="">All</option>
+                {users.map((u) => (
+                  <option value={u.uid} key={u.uid}>
+                    {u.displayName} — {u.position}, {u.team}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
           <footer>
             <menu>
               <button
@@ -87,6 +112,8 @@ export default function PuntFilters({ filters, setFilters }) {
                     hangtime: "",
                     distance: "",
                     sort: "",
+                    uid: "",
+                    userName: "",
                   });
                 }}
               >
@@ -101,8 +128,18 @@ export default function PuntFilters({ filters, setFilters }) {
       </details>
 
       <div className="tags">
+        {filters.userName && (
+          <Tag
+            key="userName"
+            type="userName"
+            value={`Punter: ${filters.userName}`}
+            updateField={(_type, val) => {
+              setFilters((prev) => ({ ...prev, uid: val, userName: val }));
+            }}
+          />
+        )}
         {Object.entries(filters).map(([type, value]) => {
-          if (type === "sort" || value === "") {
+          if (type === "sort" || type === "uid" || type === "userName" || value === "") {
             return null;
           }
           return (

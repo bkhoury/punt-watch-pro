@@ -17,9 +17,8 @@ import {
 import { db } from "@/src/lib/firebase/clientApp";
 
 export async function getPunts(db = db, filters = {}) {
-  let q = query(collection(db, "(default)"));
-
-  // q = applyPuntQueryFilters(q, filters);
+  let q = query(collection(db, "reps"));
+  q = applyPuntQueryFilters(q, filters);
   const results = await getDocs(q);
   return results.docs.map((doc) => {
     const data = doc.data();
@@ -31,9 +30,29 @@ export async function getPunts(db = db, filters = {}) {
   });
 }
 
-function applyPuntQueryFilters(q) {
+function applyPuntQueryFilters(q, filters = {}) {
+  if (filters.uid) {
+    q = query(q, where("uid", "==", filters.uid));
+  }
   q = query(q, orderBy("createdAt", "desc"));
   return q;
+}
+
+export async function getUsers() {
+  const results = await getDocs(query(collection(db, "users")));
+  return results.docs.map((snap) => ({ uid: snap.id, ...snap.data() }));
+}
+
+export async function getUsersByUids(uids) {
+  if (!uids.length) return {};
+  const results = await Promise.all(
+    uids.map((uid) => getDoc(doc(db, "users", uid)))
+  );
+  const map = {};
+  results.forEach((snap) => {
+    if (snap.exists()) map[snap.id] = snap.data();
+  });
+  return map;
 }
 
 export function getPuntsSnapshot(cb, filters = {}) {
@@ -42,7 +61,7 @@ export function getPuntsSnapshot(cb, filters = {}) {
     return;
   }
 
-  let q = query(collection(db, "(default)"));
+  let q = query(collection(db, "reps"));
   q = applyPuntQueryFilters(q, filters);
 
   return onSnapshot(q, (querySnapshot) => {

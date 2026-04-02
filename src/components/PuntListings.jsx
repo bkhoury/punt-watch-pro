@@ -7,42 +7,40 @@ import Link from "next/link";
 import { React, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import renderStars from "@/src/components/Stars.jsx";
-import { getPuntsSnapshot } from "@/src/lib/firebase/firestore.js";
+import { getPuntsSnapshot, getUsersByUids, getUsers } from "@/src/lib/firebase/firestore.js";
 import PuntFilters from "@/src/components/PuntFilters.jsx";
 
-const PuntItem = ({ punt }) => (
+const PuntItem = ({ punt, user, onUserClick }) => (
   <li key={punt.id}>
-      <ActivePunt punt={punt} />
+    <ActivePunt punt={punt} user={user} onUserClick={onUserClick} />
   </li>
 );
 
-const ActivePunt = ({ punt }) => (
+const ActivePunt = ({ punt, user, onUserClick }) => (
   <div>
-    {/* <ImageCover photo={"Punt Watch Pro Logo.png"} name={punt.name} /> */}
     <PuntVideo punt={punt} />
-    <PuntDetails punt={punt} />
+    <PuntDetails punt={punt} user={user} onUserClick={onUserClick} />
   </div>
 );
 
 const PuntVideo = ({ punt }) => (
     <div className ="punt-video">
-        <video 
+        <video
          src={punt.videoURL}
          controls
          width="100%"
          />
-    </div> 
+    </div>
 );
 
-const ImageCover = ({ photo, name }) => (
-  <div className="image-cover">
-    <img src={photo} alt={name} />
-  </div>
-);
-
-const PuntDetails = ({ punt }) => (
+const PuntDetails = ({ punt, user, onUserClick }) => (
   <div className="punt__details">
     <h2>{punt.name}</h2>
+    {user && (
+      <button type="button" onClick={() => onUserClick(punt.uid, user.displayName)}>
+        {user.displayName} — {user.position}, {user.team}
+      </button>
+    )}
     <PuntMetadata punt={punt} />
   </div>
 );
@@ -61,15 +59,22 @@ export default function PuntListings({
 }) {
   const router = useRouter();
 
-  // The initial filters are the search params from the URL, useful for when the user refreshes the page
   const initialFilters = {
     hangtime: searchParams?.hangtime || "",
     distance: searchParams?.distance || "",
     sort: searchParams?.sort || "",
+    uid: searchParams?.uid || "",
+    userName: searchParams?.userName || "",
   };
 
   const [punts, setPunts] = useState(initialPunts);
   const [filters, setFilters] = useState(initialFilters);
+  const [usersMap, setUsersMap] = useState({});
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    getUsers().then(setAllUsers);
+  }, []);
 
   useEffect(() => {
     routerWithFilters(router, filters);
@@ -85,14 +90,21 @@ export default function PuntListings({
         return true;
       });
       setPunts(filtered);
+
+      const uids = [...new Set(filtered.map((p) => p.uid).filter(Boolean))];
+      getUsersByUids(uids).then(setUsersMap);
     }, filters)
   }, [filters]);
+
+  const handleUserClick = (uid, userName) => {
+    setFilters((prev) => ({ ...prev, uid, userName }));
+  };
   return (
     <article>
-      <PuntFilters filters={filters} setFilters={setFilters} />
+      <PuntFilters filters={filters} setFilters={setFilters} users={allUsers} />
       <ul className="punts">
         {punts.map((punt) => (
-          <PuntItem key={punt.id} punt={punt} />
+          <PuntItem key={punt.id} punt={punt} user={usersMap[punt.uid]} onUserClick={handleUserClick} />
         ))}
       </ul>
     </article>
