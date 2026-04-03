@@ -26,6 +26,7 @@ export default function LoginPage() {
         setResetSent(true);
         return;
       }
+      router.push("/");
     } catch (err) {
       setError(friendlyError(err.code));
     }
