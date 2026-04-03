@@ -26,7 +26,6 @@ export default function LoginPage() {
         setResetSent(true);
         return;
       }
-      router.push("/punter");
     } catch (err) {
       setError(friendlyError(err.code));
     }
