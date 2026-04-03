@@ -5,6 +5,7 @@ import {
   getDocs,
   doc,
   getDoc,
+  setDoc,
   updateDoc,
   orderBy,
   Timestamp,
@@ -53,6 +54,14 @@ export async function getUsersByUids(uids) {
     if (snap.exists()) map[snap.id] = snap.data();
   });
   return map;
+}
+
+export async function updateUserDoc(uid, data) {
+  await setDoc(doc(db, "users", uid), data, { merge: true });
+}
+
+export async function claimPunt(puntId, uid) {
+  await updateDoc(doc(db, "reps", puntId), { uid });
 }
 
 export function getPuntsSnapshot(cb, filters = {}) {

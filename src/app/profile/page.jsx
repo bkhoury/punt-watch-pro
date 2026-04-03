@@ -11,6 +11,7 @@ import {
   updateUserPassword,
   onAuthStateChanged,
 } from "@/src/lib/firebase/auth.js";
+import { updateUserDoc } from "@/src/lib/firebase/firestore.js";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -62,6 +63,7 @@ export default function ProfilePage() {
         photoURL = await getDownloadURL(storageRef);
       }
       await updateUserProfile(displayName, photoURL);
+      await updateUserDoc(user.uid, { displayName, photoURL });
       setProfileMsg({ type: "success", text: "Profile updated." });
       setPhotoFile(null);
     } catch (err) {
