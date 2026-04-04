@@ -7,14 +7,16 @@ import Link from "next/link";
 import { React, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import renderStars from "@/src/components/Stars.jsx";
-import { getPuntsSnapshot, getUsersByUids, getUsers, claimPunt } from "@/src/lib/firebase/firestore.js";
+import { getPuntsSnapshot, getUsersByUids, getUsers, claimPunt, deletePunt } from "@/src/lib/firebase/firestore.js";
 import { getCurrentUser } from "@/src/lib/firebase/auth.js";
 import PuntFilters from "@/src/components/PuntFilters.jsx";
+import PuntComments from "@/src/components/PuntComments.jsx";
 
-const PuntItem = ({ punt, user, onUserClick, onClaim }) => (
+const PuntItem = ({ punt, user, onUserClick, onClaim, onDelete }) => (
   <li className="punt-card">
     <PuntVideo punt={punt} />
-    <PuntDetails punt={punt} user={user} onUserClick={onUserClick} onClaim={onClaim} />
+    <PuntDetails punt={punt} user={user} onUserClick={onUserClick} onClaim={onClaim} onDelete={onDelete} />
+    <PuntComments puntId={punt.id} />
   </li>
 );
 
@@ -24,7 +26,7 @@ const PuntVideo = ({ punt }) => (
   </div>
 );
 
-const PuntDetails = ({ punt, user, onUserClick, onClaim }) => (
+const PuntDetails = ({ punt, user, onUserClick, onClaim, onDelete }) => (
   <div className="punt__details">
     <div className="punt__details-top">
       <div className="punt__punter-row">
@@ -45,6 +47,9 @@ const PuntDetails = ({ punt, user, onUserClick, onClaim }) => (
       </div>
       <div className="punt__details-right">
         <h2 className="punt__name">{punt.name}</h2>
+        <button type="button" className="punt__delete" onClick={() => onDelete(punt.id, punt.videoURL)}>
+          Delete
+        </button>
         <button type="button" className="punt__claim" onClick={() => onClaim(punt.id)}>
           Claim
         </button>
@@ -120,14 +125,38 @@ export default function PuntListings({
     claimPunt(puntId, currentUser.uid);
   };
 
+  const [confirmDelete, setConfirmDelete] = useState(null); // { id, videoURL }
+
+  const handleDelete = (puntId, videoURL) => {
+    setConfirmDelete({ id: puntId, videoURL });
+  };
+
+  const handleConfirmDelete = () => {
+    deletePunt(confirmDelete.id, confirmDelete.videoURL);
+    setConfirmDelete(null);
+  };
+
   return (
     <article>
       <PuntFilters filters={filters} setFilters={setFilters} users={allUsers} />
       <ul className="punts">
         {punts.map((punt) => (
-          <PuntItem key={punt.id} punt={punt} user={usersMap[punt.uid]} onUserClick={handleUserClick} onClaim={handleClaim} />
+          <PuntItem key={punt.id} punt={punt} user={usersMap[punt.uid]} onUserClick={handleUserClick} onClaim={handleClaim} onDelete={handleDelete} />
         ))}
       </ul>
+
+      {confirmDelete && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h2>Delete Punt?</h2>
+            <p>This will permanently delete the rep and its video. This cannot be undone.</p>
+            <div className="modal-actions">
+              <button className="button--cancel" onClick={() => setConfirmDelete(null)}>Cancel</button>
+              <button className="button--confirm modal-confirm--delete" onClick={handleConfirmDelete}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
     </article>
   );
 }

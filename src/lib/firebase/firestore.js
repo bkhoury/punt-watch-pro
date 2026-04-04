@@ -15,7 +15,9 @@ import {
   getFirestore,
 } from "firebase/firestore";
 
-import { db } from "@/src/lib/firebase/clientApp";
+import { deleteDoc } from "firebase/firestore";
+import { ref as storageRef, deleteObject } from "firebase/storage";
+import { db, storage } from "@/src/lib/firebase/clientApp";
 
 export async function getPunts(db = db, filters = {}) {
   let q = query(collection(db, "reps"));
@@ -62,6 +64,40 @@ export async function updateUserDoc(uid, data) {
 
 export async function claimPunt(puntId, uid) {
   await updateDoc(doc(db, "reps", puntId), { uid });
+}
+
+export function getCommentsSnapshot(puntId, cb) {
+  const q = query(
+    collection(db, "reps", puntId, "comments"),
+    orderBy("createdAt", "asc")
+  );
+  return onSnapshot(q, (snap) => {
+    cb(snap.docs.map((d) => ({ id: d.id, ...d.data(), createdAt: d.data().createdAt?.toMillis() ?? null })));
+  });
+}
+
+export async function deleteComment(puntId, commentId) {
+  await deleteDoc(doc(db, "reps", puntId, "comments", commentId));
+}
+
+export async function addComment(puntId, uid, text) {
+  await addDoc(collection(db, "reps", puntId, "comments"), {
+    uid,
+    text,
+    createdAt: Timestamp.now(),
+  });
+}
+
+export async function deletePunt(puntId, videoURL) {
+  await deleteDoc(doc(db, "reps", puntId));
+  if (videoURL) {
+    try {
+      const path = decodeURIComponent(videoURL.split("/o/")[1].split("?")[0]);
+      await deleteObject(storageRef(storage, path));
+    } catch (err) {
+      console.warn("Could not delete video from storage:", err);
+    }
+  }
 }
 
 export function getPuntsSnapshot(cb, filters = {}) {
