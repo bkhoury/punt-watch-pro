@@ -1,24 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signInWithEmail, signUpWithEmail, resetPassword } from "@/src/lib/firebase/auth.js";
+import { updateUserDoc } from "@/src/lib/firebase/firestore.js";
 
 export default function LoginPage() {
   const router = useRouter();
   const [mode, setMode] = useState("signin"); // "signin" | "signup" | "reset"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState(null); // "coach" | "player"
   const [error, setError] = useState("");
   const [resetSent, setResetSent] = useState(false);
-  console.log("On Login Page", { mode, email, password });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
       if (mode === "signup") {
-        await signUpWithEmail(email, password);
+        if (!role) { setError("Please select a role."); return; }
+        const cred = await signUpWithEmail(email, password);
+        await updateUserDoc(cred.user.uid, { role, email });
       } else if (mode === "signin") {
         await signInWithEmail(email, password);
       } else if (mode === "reset") {
@@ -26,10 +29,17 @@ export default function LoginPage() {
         setResetSent(true);
         return;
       }
-      router.push("/");
+      router.push("/punter");
     } catch (err) {
       setError(friendlyError(err.code));
     }
+  };
+
+  const switchMode = (next) => {
+    setMode(next);
+    setError("");
+    setRole(null);
+    setResetSent(false);
   };
 
   return (
@@ -40,9 +50,7 @@ export default function LoginPage() {
         </h1>
 
         {resetSent ? (
-          <p className="login-success">
-            Password reset email sent. Check your inbox.
-          </p>
+          <p className="login-success">Password reset email sent. Check your inbox.</p>
         ) : (
           <form onSubmit={handleSubmit} className="login-form">
             <label htmlFor="email">Email</label>
@@ -69,6 +77,30 @@ export default function LoginPage() {
               </>
             )}
 
+            {mode === "signup" && (
+              <div className="role-picker">
+                <p className="role-picker__label">I am a...</p>
+                <div className="role-picker__options">
+                  <button
+                    type="button"
+                    className={`role-option ${role === "player" ? "role-option--active" : ""}`}
+                    onClick={() => setRole("player")}
+                  >
+                    <span className="role-option__title">Player</span>
+                    <span className="role-option__desc">Upload and manage your own reps</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`role-option ${role === "coach" ? "role-option--active" : ""}`}
+                    onClick={() => setRole("coach")}
+                  >
+                    <span className="role-option__title">Coach</span>
+                    <span className="role-option__desc">View and manage a roster of players</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
             {error && <p className="login-error">{error}</p>}
 
             <button type="submit">
@@ -80,18 +112,12 @@ export default function LoginPage() {
         <div className="login-links">
           {mode === "signin" && (
             <>
-              <button onClick={() => { setMode("signup"); setError(""); }}>
-                Create an account
-              </button>
-              <button onClick={() => { setMode("reset"); setError(""); }}>
-                Forgot password?
-              </button>
+              <button onClick={() => switchMode("signup")}>Create an account</button>
+              <button onClick={() => switchMode("reset")}>Forgot password?</button>
             </>
           )}
           {(mode === "signup" || mode === "reset") && (
-            <button onClick={() => { setMode("signin"); setError(""); setResetSent(false); }}>
-              Back to sign in
-            </button>
+            <button onClick={() => switchMode("signin")}>Back to sign in</button>
           )}
         </div>
       </div>

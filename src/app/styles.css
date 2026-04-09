@@ -1124,6 +1124,175 @@ a {
   background-color: rgb(42 72 101);
 }
 
+/* Roster Page */
+.roster-page {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.roster-page h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: rgb(27 58 87);
+  margin-bottom: 24px;
+}
+
+.roster-empty {
+  color: rgb(107 114 128);
+  font-size: 0.9rem;
+}
+
+.roster-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roster-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.roster-card__pic {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgb(209 213 219);
+  flex-shrink: 0;
+}
+
+.roster-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.roster-card__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgb(27 58 87);
+}
+
+.roster-card__email {
+  font-size: 0.8rem;
+  color: rgb(107 114 128);
+}
+
+.invite-desc {
+  font-size: 0.875rem;
+  color: rgb(107 114 128);
+  margin-bottom: 16px;
+}
+
+.invite-code-display {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.invite-code {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgb(27 58 87);
+  background: rgb(240 245 250);
+  border: 2px dashed rgb(56 85 116);
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+.invite-code-display button {
+  background: none;
+  border: 1px solid rgb(209 213 219);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  color: rgb(75 85 99);
+  cursor: pointer;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: rgb(56 85 116);
+  }
+}
+
+.invite-generate-btn {
+  background-color: rgb(56 85 116);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:hover {
+    background-color: rgb(42 72 101);
+  }
+}
+
+.role-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 4px 0;
+}
+
+.role-picker__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgb(75 85 99);
+}
+
+.role-picker__options {
+  display: flex;
+  gap: 10px;
+}
+
+.role-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 2px solid rgb(209 213 219);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+  text-align: left;
+
+  &:hover {
+    border-color: rgb(56 85 116);
+  }
+}
+
+.role-option--active {
+  border-color: rgb(56 85 116);
+  background-color: rgb(240 245 250);
+}
+
+.role-option__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgb(27 58 87);
+}
+
+.role-option__desc {
+  font-size: 0.75rem;
+  color: rgb(107 114 128);
+  font-weight: 400;
+}
+
 .login-links {
   display: flex;
   flex-direction: column;
@@ -1181,4 +1350,168 @@ a {
     border: none;
     font-size: 0.8rem;
   }
+}
+
+/* ── Marketplace ───────────────────────────────────────── */
+
+.marketplace-page {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+
+  & h1 {
+    font-size: 1.75rem;
+    color: rgb(27 58 87);
+    margin-bottom: 1.5rem;
+  }
+}
+
+.marketplace-empty {
+  color: rgb(107 114 128);
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.marketplace-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.service-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+  }
+}
+
+.service-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-card__type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white;
+  background-color: rgb(56 85 116);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.service-card__price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgb(255 111 0);
+}
+
+.service-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(27 58 87);
+}
+
+.service-card__desc {
+  font-size: 0.875rem;
+  color: rgb(75 85 99);
+  flex: 1;
+  line-height: 1.5;
+}
+
+.service-card__coach {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgb(229 231 235);
+  font-size: 0.875rem;
+  color: rgb(56 85 116);
+  font-weight: 500;
+}
+
+.service-card__coach-pic {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ── Profile — Services List ───────────────────────────── */
+
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.service-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgb(243 244 246);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  gap: 1rem;
+}
+
+.service-item__info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+  color: rgb(27 58 87);
+}
+
+.service-item__actions {
+  display: flex;
+  gap: 0.5rem;
+
+  & button {
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+
+    &:first-child {
+      background-color: rgb(56 85 116);
+      color: white;
+
+      &:hover {
+        background-color: rgb(42 72 101);
+      }
+    }
+
+    &:last-child {
+      background-color: white;
+      color: rgb(220 38 38);
+      border: 1px solid rgb(220 38 38);
+
+      &:hover {
+        background-color: rgb(254 242 242);
+      }
+    }
+  }
+}
+
+.service-form__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }

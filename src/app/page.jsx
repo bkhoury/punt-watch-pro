@@ -1,29 +1,25 @@
-import Restaurant from "@/src/components/Restaurant.jsx";
-import { Suspense } from "react";
-import { getRestaurantById } from "@/src/lib/firebase/firestore.js";
-import {
-  getAuthenticatedAppForUser,
-  getAuthenticatedAppForUser as getUser,
-} from "@/src/lib/firebase/serverApp.js";
-import PuntListings from "@/src/components/PuntListings.jsx";
-import { getFirestore } from "firebase/firestore";
-import { getPunts } from "@/src/lib/firebase/firestore.js";
+import { getAuthenticatedAppForUser } from "@/src/lib/firebase/serverApp.js";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getRecentPunts } from "@/src/lib/firebase/firestore.js";
+import RecentPunts from "@/src/components/RecentPunts.jsx";
 
-export default async function Home(props) {
-  const searchParams = await props.searchParams;
-  // Using seachParams which Next.js provides, allows the filtering to happen on the server-side, for example:
-  // ?city=London&category=Indian&sort=Review
-  const { firebaseServerApp } = await getAuthenticatedAppForUser();
-  const punts = await getPunts(
-    getFirestore(firebaseServerApp),
-    searchParams
-  );
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const { firebaseServerApp, currentUser } = await getAuthenticatedAppForUser();
+  const db = getFirestore(firebaseServerApp);
+
+  let uid = null;
+  if (currentUser) {
+    const snap = await getDoc(doc(db, "users", currentUser.uid));
+    if (snap.exists() && snap.data().role === "player") uid = currentUser.uid;
+  }
+
+  const punts = await getRecentPunts(db, 5, uid);
+
   return (
     <main className="main__home">
-      <PuntListings
-        initialPunts={punts}
-        searchParams={searchParams}
-      />
+      <RecentPunts punts={punts} />
     </main>
   );
 }
