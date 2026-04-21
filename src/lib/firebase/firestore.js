@@ -20,14 +20,13 @@ import { db, storage, auth } from "@/src/lib/firebase/clientApp";
 
 function applyPuntQueryFilters(q, filters = {}) {
   console.log("Applying punt query filters:", filters);
-  if (filters.uid) {
+  if (filters.assignedUID) {
+    q = query(q, where("assignedUID", "==", filters.assignedUID));
+  } else if (filters.uid) {
     q = query(q, where("uid", "==", filters.uid));
   } else if (filters.allowedUids?.length) {
     q = query(q, where("uid", "in", filters.allowedUids.slice(0, 30)));
   }
-  // if (filters.uid == "") {
-  //   q = query(q, where("uid", "==", "__no_match__"));
-  // }
   q = query(q, orderBy("createdAt", "desc"));
   return q;
 }

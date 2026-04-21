@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getPuntsSnapshot, getUsersByUids, claimPunt, deletePunt, getUserDoc, getRoster } from "@/src/lib/firebase/firestore.js";
 import { getCurrentUser, onAuthStateChanged } from "@/src/lib/firebase/auth.js";
-import PuntFilters from "@/src/components/PuntFilters.jsx";
 import PuntComments from "@/src/components/PuntComments.jsx";
 
 // --- Sub-components ---
@@ -16,7 +15,7 @@ const PuntVideo = ({ punt }) => (
 );
 
 
-export const PuntCard = ({ punt, user, rosterUsers, onUserClick, onClaim, onDelete, onAssign }) => (
+export const PuntCard = ({ punt, user, rosterUsers, onUserClick, onDelete, onAssign }) => (
   <li className="punt-card">
     <PuntVideo punt={punt} />
     <div className="punt__details">
@@ -41,7 +40,6 @@ export const PuntCard = ({ punt, user, rosterUsers, onUserClick, onClaim, onDele
           <h2 className="punt__name">{punt.name}</h2>
           <span className="punt__stat-value" suppressHydrationWarning>{new Date(punt.createdAt).toLocaleString([], { month: "numeric", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })}</span>
           <button type="button" className="punt__delete" onClick={() => onDelete(punt.id, punt.videoURL)}>Delete</button>
-          <button type="button" className="punt__claim" onClick={() => onClaim(punt.id)}>Claim</button>
         </div>
       </div>
       {rosterUsers?.length > 0 && (

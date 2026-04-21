@@ -29,6 +29,7 @@ export default function SideNav() {
   console.log("Rendering SideNav with role:", role, "and pathname:", pathname);
   return (
     <nav className="sidenav">
+      {link("/reps", "Reps")}
       {role === "coach" && link("/roster", "My Roster")}
       {/* {uid && link(`/reps?uid=${uid}`, "Reps")} */}
       {link("/profile", "Profile")}

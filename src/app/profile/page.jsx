@@ -19,6 +19,7 @@ const SERVICE_LABELS = {
   virtual_lesson: "Virtual Lesson",
   private_lesson: "Private Lesson",
   subscription: "Monthly Subscription",
+  group_session: "Group Session",
 };
 
 export default function ProfilePage() {
